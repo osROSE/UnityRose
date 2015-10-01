@@ -95,3 +95,6 @@ Assets/Scenes/Maps/*
 !Assets/Scenes/Maps/.keep
 Assets/GameData/
 Assets/Resources/
+
+# Temporary Rose Stuff
+Assets/MapObjects/

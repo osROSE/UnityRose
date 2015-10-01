@@ -204,8 +204,41 @@ public class Utils
     {
         return  file.Contains("\\") ? file.ToLower().Replace("\\", "/") : file.ToLower();
     }
+
+    public static string NormalizePath(string path)
+    {
+        string newPath = path;
+
+        newPath = newPath.Replace("\\", "/");
+
+        while (true)
+        {
+            var repPath = newPath.Replace("//", "/");
+            if (repPath == newPath)
+            {
+                break;
+            }
+            newPath = repPath;
+        }
+
+        return newPath;
+    }
 	
+    public static string CombinePath(string path1, string path2)
+    {
+        return NormalizePath(path1 + "/" + path2);
+    }
+
+    public static string CombinePath(string path1, string path2, string path3)
+    {
+        return CombinePath(CombinePath(path1, path2), path3);
+    }
 	
+    public static string CombinePath(string path1, string path2, string path3, string path4)
+    {
+        return CombinePath(CombinePath(CombinePath(path1, path2), path3), path4);
+    }
+
 	// UI functions
 	public static void handleTab(EventSystem system)
 	{
@@ -468,25 +501,96 @@ public class Utils
         return null;
 	}
 
+    public static void EncapsulateTransformedBounds(ref Bounds b, Matrix4x4 t, Bounds i, bool first)
+    {
+        if (first)
+        {
+            b.center = t.MultiplyVector(i.min);
+            b.size = new Vector3(1, 1, 1);
+        } else
+        {
+            b.Encapsulate(t.MultiplyVector(i.min));
+        }
+        b.Encapsulate(t.MultiplyVector(i.max));
+    }
 
-	//****************************************************************************************************
-	//  static function DrawLine(rect : Rect) : void
-	//  static function DrawLine(rect : Rect, color : Color) : void
-	//  static function DrawLine(rect : Rect, width : float) : void
-	//  static function DrawLine(rect : Rect, color : Color, width : float) : void
-	//  static function DrawLine(Vector2 pointA, Vector2 pointB) : void
-	//  static function DrawLine(Vector2 pointA, Vector2 pointB, color : Color) : void
-	//  static function DrawLine(Vector2 pointA, Vector2 pointB, width : float) : void
-	//  static function DrawLine(Vector2 pointA, Vector2 pointB, color : Color, width : float) : void
-	//  
-	//  Draws a GUI line on the screen.
-	//  
-	//  DrawLine makes up for the severe lack of 2D line rendering in the Unity runtime GUI system.
-	//  This function works by drawing a 1x1 texture filled with a color, which is then scaled
-	//   and rotated by altering the GUI matrix.  The matrix is restored afterwards.
-	//****************************************************************************************************
-	
-	public static Texture2D lineTex;
+    public class BoundingSphereBuilder
+    {
+        private List<Vector3> aPoints = new List<Vector3>();
+
+        public void Add(Matrix4x4 t, Bounds i)
+        {
+            aPoints.Add(t.MultiplyVector(i.min));
+            aPoints.Add(t.MultiplyVector(i.max));
+        }
+
+        public BoundingSphere Build()
+        {
+            Vector3 xmin, xmax, ymin, ymax, zmin, zmax;
+            xmin = ymin = zmin = Vector3.one * float.PositiveInfinity;
+            xmax = ymax = zmax = Vector3.one * float.NegativeInfinity;
+            foreach (var p in aPoints)
+            {
+                if (p.x < xmin.x) xmin = p;
+                if (p.x > xmax.x) xmax = p;
+                if (p.y < ymin.y) ymin = p;
+                if (p.y > ymax.y) ymax = p;
+                if (p.z < zmin.z) zmin = p;
+                if (p.z > zmax.z) zmax = p;
+            }
+            var xSpan = (xmax - xmin).sqrMagnitude;
+            var ySpan = (ymax - ymin).sqrMagnitude;
+            var zSpan = (zmax - zmin).sqrMagnitude;
+            var dia1 = xmin;
+            var dia2 = xmax;
+            var maxSpan = xSpan;
+            if (ySpan > maxSpan)
+            {
+                maxSpan = ySpan;
+                dia1 = ymin; dia2 = ymax;
+            }
+            if (zSpan > maxSpan)
+            {
+                dia1 = zmin; dia2 = zmax;
+            }
+            var center = (dia1 + dia2) * 0.5f;
+            var sqRad = (dia2 - center).sqrMagnitude;
+            var radius = Mathf.Sqrt(sqRad);
+            foreach (var p in aPoints)
+            {
+                float d = (p - center).sqrMagnitude;
+                if (d > sqRad)
+                {
+                    var r = Mathf.Sqrt(d);
+                    radius = (radius + r) * 0.5f;
+                    sqRad = radius * radius;
+                    var offset = r - radius;
+                    center = (radius * center + offset * p) / r;
+                }
+            }
+            return new BoundingSphere(center, radius);
+        }
+
+    }
+
+    //****************************************************************************************************
+    //  static function DrawLine(rect : Rect) : void
+    //  static function DrawLine(rect : Rect, color : Color) : void
+    //  static function DrawLine(rect : Rect, width : float) : void
+    //  static function DrawLine(rect : Rect, color : Color, width : float) : void
+    //  static function DrawLine(Vector2 pointA, Vector2 pointB) : void
+    //  static function DrawLine(Vector2 pointA, Vector2 pointB, color : Color) : void
+    //  static function DrawLine(Vector2 pointA, Vector2 pointB, width : float) : void
+    //  static function DrawLine(Vector2 pointA, Vector2 pointB, color : Color, width : float) : void
+    //  
+    //  Draws a GUI line on the screen.
+    //  
+    //  DrawLine makes up for the severe lack of 2D line rendering in the Unity runtime GUI system.
+    //  This function works by drawing a 1x1 texture filled with a color, which is then scaled
+    //   and rotated by altering the GUI matrix.  The matrix is restored afterwards.
+    //****************************************************************************************************
+
+    public static Texture2D lineTex;
 	
 	public static void DrawLine(Rect rect) { DrawLine(rect, GUI.contentColor, 1.0f); }
 	public static void DrawLine(Rect rect, Color color) { DrawLine(rect, color, 1.0f); }

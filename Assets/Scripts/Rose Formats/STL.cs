@@ -270,7 +270,23 @@ namespace UnityRose.Formats
 
             fh.Close();
         }
-        
+
+        public string GetString(string stringID, Language langID)
+        {
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                if (string.Compare(Entries[i].StringID, stringID, true) == 0)
+                    return Rows[(int)langID][i].Text;
+            }
+
+            return null;
+        }
+
+        public enum Language
+        {
+            English = 1
+        }
+
         /// <summary>
         /// Searches for the specified string ID.
         /// </summary>
@@ -278,13 +294,12 @@ namespace UnityRose.Formats
         /// <returns>The result or if nothing is found, the string ID.</returns>
         public string Search(string stringID)
         {
-            for (int i = 0; i < Entries.Count; i++)
-            {
-                if (string.Compare(Entries[i].StringID, stringID, true) == 0)
-                    return Rows[1][i].Text;
-            }
-
+            string value = GetString(stringID, Language.English);
+            if (value != null)
+                return value;
             return stringID;
         }
+
+
     }
 }

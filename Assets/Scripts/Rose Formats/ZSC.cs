@@ -759,7 +759,7 @@ namespace UnityRose.Formats
                                 Objects[i].Models[j].DummyIndex = (DummyType)fh.Read<short>();
                                 break;
                             case FlagType.Parent:
-                                Objects[i].Models[j].Parent = (short)(fh.Read<short>() - 1);
+                                Objects[i].Models[j].Parent = fh.Read<short>();
                                 break;
                             case FlagType.Collision:
                                 {
