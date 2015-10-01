@@ -42,9 +42,6 @@ $RECYCLE.BIN/
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-#custom addition files to exclude
-*.unity
-
 #folders
 Temp/
 obj/
@@ -78,9 +75,6 @@ packages/JsonFx.2.0.1209.2802/lib/wp40/JsonFx.dll
 packages/JsonFx.2.0.1209.2802/lib/wp40/JsonFx.xml
 packages/repositories.config
 *.sln
-*.unity
-Assets/Scenes/Maps/charSelect.unity
-*.unity
 *.csproj
 
 # Rose stuff
@@ -90,7 +84,4 @@ Assets/3ddata/*
 Assets/Terrain/Textures.meta
 Assets/Terrain/Textures/*
 !Assets/Terrain/Textures/.keep
-Assets/Scenes/Maps.meta
-Assets/Scenes/Maps/*
-!Assets/Scenes/Maps/.keep
 Assets/GameData/
