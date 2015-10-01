@@ -25,6 +25,31 @@ Looking for the official ROSE Online game client?  Check out
 [http://warpportal.com/](http://warpportal.com/) to get started!
 
 
+Building
+-----------------------
+Building the project requires a little bit of setup, since we cannot include
+all of the files for various reasons.
+
+### 3ddata
+You'll need to unpack the ROSE client's VFS files and place `3DDATA`'s content
+into `Assets/3ddata`.
+
+#### MipMap data
+Mipmap data is currently bugged in the original DDS files. You'll need
+ImageMagick installed and (preferably) a unix command line (whether it be on
+linux, mac, or cygwin/msys on windows).
+
+Run the following the commands:
+
+```shell
+$ cd Assets/3ddata
+$ find . -type f -name "*.DDS" | xargs -L1 -I{} mogrify -define dds:mipmaps=0 "{}"
+```
+
+Be sure not to interrupt this command, and to only run it inside of the `3ddata`
+folder! It can be hazardous otherwise!
+
+
 Licence &amp; copyright
 -----------------------
 
