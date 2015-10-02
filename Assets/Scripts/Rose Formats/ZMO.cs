@@ -274,8 +274,67 @@ namespace UnityRose.Formats
 			return clip;
 		}
 
-		//append animation clip
-		public AnimationClip buildAnimationClip(string objectName, AnimationClip clip)
+        public AnimationClip BuildSkeletonAnimationClip(RoseSkeletonData skeleton)
+        {
+            var clip = new AnimationClip();
+            clip.legacy = true;
+
+            for (var i = 0; i < channelCount; ++i)
+            {
+                var boneId = Channels[i].ID;
+                var cbn = "Bone_" + boneId.ToString();
+                int curBoneIdx = boneId;
+                while (true)
+                {
+                    if (curBoneIdx == 0) break;
+                    curBoneIdx = skeleton.bones[curBoneIdx].parent;
+
+                    cbn = "Bone_" + curBoneIdx + "/" + cbn;
+                }
+
+                if (Channels[i].Type == ChannelType.Rotation)
+                {
+                    var curvex = new AnimationCurve();
+                    var curvey = new AnimationCurve();
+                    var curvez = new AnimationCurve();
+                    var curvew = new AnimationCurve();
+                    for (var j = 0; j < frameCount; ++j)
+                    {
+                        Frame.Channel chan = Frames[j].Channels[i];
+                        curvex.AddKey((float)j / (float)FPS, chan.Rotation.x);
+                        curvey.AddKey((float)j / (float)FPS, chan.Rotation.y);
+                        curvez.AddKey((float)j / (float)FPS, chan.Rotation.z);
+                        curvew.AddKey((float)j / (float)FPS, chan.Rotation.w);
+                    }
+                    clip.SetCurve(cbn, typeof(Transform), "localRotation.x", curvex);
+                    clip.SetCurve(cbn, typeof(Transform), "localRotation.y", curvey);
+                    clip.SetCurve(cbn, typeof(Transform), "localRotation.z", curvez);
+                    clip.SetCurve(cbn, typeof(Transform), "localRotation.w", curvew);
+                }
+                else if (Channels[i].Type == ChannelType.Position)
+                {
+                    var curvex = new AnimationCurve();
+                    var curvey = new AnimationCurve();
+                    var curvez = new AnimationCurve();
+                    for (var j = 0; j < frameCount; ++j)
+                    {
+                        Frame.Channel chan = Frames[j].Channels[i];
+                        curvex.AddKey((float)j / (float)FPS, chan.Position.x);
+                        curvey.AddKey((float)j / (float)FPS, chan.Position.y);
+                        curvez.AddKey((float)j / (float)FPS, chan.Position.z);
+                    }
+                    clip.SetCurve(cbn, typeof(Transform), "localPosition.x", curvex);
+                    clip.SetCurve(cbn, typeof(Transform), "localPosition.y", curvey);
+                    clip.SetCurve(cbn, typeof(Transform), "localPosition.z", curvez);
+                }
+            }
+
+            clip.EnsureQuaternionContinuity();
+            return clip;
+        }
+
+        //append animation clip
+        public AnimationClip buildAnimationClip(string objectName, AnimationClip clip)
 		{
 			//var clip = new AnimationClip();
 

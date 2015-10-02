@@ -25,7 +25,10 @@ public class ROSEImportWindow : EditorWindow {
 
         GUILayout.Label("Importing", EditorStyles.boldLabel);
         GUILayout.Label("Current Path: " + ROSEImport.GetCurrentPath());
-
+        if (GUILayout.Button("Clear Unity 3Ddata"))
+            ROSEImport.ClearUData();
+        if (GUILayout.Button("Clear All 3Ddata"))
+            ROSEImport.ClearData();
 
         GUILayout.Label("Maps", EditorStyles.boldLabel);
 

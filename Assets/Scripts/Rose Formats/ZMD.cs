@@ -51,7 +51,9 @@ namespace UnityRose.Formats
 			
 			for( int i = 0; i < bones.Count; i++ )
 			{
-				Matrix4x4 myMat = Matrix4x4.TRS(
+                bones[i].boneObject = new GameObject(bones[i].Name);
+
+                Matrix4x4 myMat = Matrix4x4.TRS(
 					bones[i].Position,
 					bones[i].Rotation,
 					Vector3.one);
@@ -90,7 +92,9 @@ namespace UnityRose.Formats
 			
 			for(int i = 0; i < nDummies; i++)
 			{
-				Matrix4x4 myMat = Matrix4x4.TRS(
+                dummies[i].boneObject = new GameObject(dummies[i].Name);
+
+                Matrix4x4 myMat = Matrix4x4.TRS(
 					dummies[i].Position,
 					dummies[i].Rotation,
 					Vector3.one);
@@ -166,7 +170,6 @@ namespace UnityRose.Formats
 				node.BoneID = i;
 				node.ParentID = fh.Read<int>();
 				node.Name = fh.Read<ZString>();
-				node.boneObject = new GameObject(node.Name);
 				
 				node.Position = new Vector3()
 				{
@@ -196,7 +199,6 @@ namespace UnityRose.Formats
 				node = new BoneNode();
 				node.BoneID = nBones + i;
 				node.Name = fh.Read<ZString>();
-				node.boneObject = new GameObject(node.Name);
 				node.ParentID = fh.Read<int>();
 				
 				node.Position = new Vector3()
@@ -229,8 +231,7 @@ namespace UnityRose.Formats
 			extraDummy.Position = new Vector3();
 			extraDummy.Rotation = Quaternion.identity;
 			extraDummy.BoneID = nBones + nDummies;
-			extraDummy.boneObject = new GameObject(extraDummy.Name);
-			
+
 			dummies.Add (extraDummy);
 			
 			nDummies = dummies.Count;

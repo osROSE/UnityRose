@@ -4,7 +4,6 @@ using System.Collections;
 public class RoseMapObject : MonoBehaviour
 {
     public RoseMapObjectData data;
-    private RoseMapObjectData oldData;
 
     private static void DestroyChildren(GameObject go, GameObject butIgnore = null)
     {
