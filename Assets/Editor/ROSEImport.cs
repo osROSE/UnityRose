@@ -88,6 +88,8 @@ public class ROSEImport {
 
     private static string GenerateAssetPath(string rosePath, string unityExt)
     {
+		rosePath = Utils.NormalizePath (rosePath);
+
         var dirPath = Path.GetDirectoryName(rosePath);
         if (!dirPath.StartsWith("3DDATA", System.StringComparison.InvariantCultureIgnoreCase))
         {
