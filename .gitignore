@@ -39,7 +39,6 @@ sysinfo.txt
 
 # ROSE stuff
 /Assets/3ddata/*
-/!Assets/3ddata/.keep
 /Assets/Terrain/Textures/*
 /!Assets/Terrain/Textures/.keep
 /Assets/GameData/
