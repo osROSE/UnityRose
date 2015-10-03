@@ -259,7 +259,11 @@ public class ROSEImport {
                     var zscMotion = chrObj.Animations[i];
                     if (zscMotion.Animation >= 0)
                     {
-                        ImportAnimation(chr.MotionFiles[zscMotion.Animation], npc.skeleton);
+                        var anim = ImportAnimation(chr.MotionFiles[zscMotion.Animation], npc.skeleton);
+						while (npc.animations.Count <= (int)zscMotion.Type) {
+							npc.animations.Add(null);
+						}
+						npc.animations[(int)zscMotion.Type] = anim;
                     }
                 }
 
