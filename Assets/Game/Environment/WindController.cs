@@ -8,7 +8,9 @@ namespace SevenHearts.Environment {
 		public class Settings {
 			public float elasticity = 0.5f;
 			public float speed = 0.5f;
+			public bool bobX = true;
 			public bool bobY = false;
+			public bool bobZ = true;
 		}
 
 		public Settings settings;
@@ -26,9 +28,9 @@ namespace SevenHearts.Environment {
 			foreach (Vector3 v in this.vertices) {
 				float wind = this.GetWindLevel(v.x, v.z);
 				newVerticies.Add(new Vector3(
-						v.x + wind,
+						v.x + (this.settings.bobX ? wind : 0f),
 						v.y - (this.settings.bobY ? wind : 0f),
-						v.z + wind
+						v.z + (this.settings.bobZ ? wind : 0f)
 					));
 			}
 
