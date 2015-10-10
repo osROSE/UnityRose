@@ -274,7 +274,7 @@ namespace UnityRose.Formats
 			return clip;
 		}
 
-        public AnimationClip BuildSkeletonAnimationClip(RoseSkeletonData skeleton)
+        public AnimationClip BuildSkeletonAnimationClip(string []boneNames)
         {
             var clip = new AnimationClip();
             clip.legacy = true;
@@ -282,15 +282,7 @@ namespace UnityRose.Formats
             for (var i = 0; i < channelCount; ++i)
             {
                 var boneId = Channels[i].ID;
-                var cbn = "Bone_" + boneId.ToString();
-                int curBoneIdx = boneId;
-                while (true)
-                {
-                    if (curBoneIdx == 0) break;
-                    curBoneIdx = skeleton.bones[curBoneIdx].parent;
-
-                    cbn = "Bone_" + curBoneIdx + "/" + cbn;
-                }
+                var cbn = boneNames[boneId];
 
                 if (Channels[i].Type == ChannelType.Rotation)
                 {

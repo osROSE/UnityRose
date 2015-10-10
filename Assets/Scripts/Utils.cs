@@ -16,7 +16,7 @@ using UnityRose;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
-    
+
 public class Utils
 {
 	public static bool isEmail(string email)
@@ -571,6 +571,30 @@ public class Utils
             return new BoundingSphere(center, radius);
         }
 
+    }
+
+    public static bool CurvesMatch(AnimationCurve x, AnimationCurve y)
+    {
+        if (x.preWrapMode != y.preWrapMode)
+            return false;
+        if (x.postWrapMode != y.postWrapMode)
+            return false;
+        if (x.keys.Length != y.keys.Length)
+            return false;
+        for (var i = 0; i < x.keys.Length; ++i)
+        {
+            if (x.keys[i].time != y.keys[i].time)
+                return false;
+            if (x.keys[i].value != y.keys[i].value)
+                return false;
+            if (x.keys[i].tangentMode != y.keys[i].tangentMode)
+                return false;
+            if (x.keys[i].inTangent != y.keys[i].inTangent)
+                return false;
+            if (x.keys[i].outTangent != y.keys[i].outTangent)
+                return false;
+        }
+        return true;
     }
 
     //****************************************************************************************************

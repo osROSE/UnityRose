@@ -98,5 +98,8 @@ Assets/Resources/
 
 # Temporary Rose Stuff
 Assets/MapObjects/
-Assets/NpcParts/
+Assets/MapObjects.meta
+Assets/NpcModels/
+Assets/NpcModels.meta
 Assets/Npcs/
+Assets/Npcs.meta

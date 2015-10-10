@@ -12,7 +12,7 @@ public class ROSEImportWindow : EditorWindow {
 
     [MenuItem("ROSE/Import Window")]
     static void Init() {
-        var window = GetWindow<ROSEImportWindow>();
+        var window = GetWindow<ROSEImportWindow>("ROSE Import");
         window.Show();
     }
 
@@ -37,7 +37,7 @@ public class ROSEImportWindow : EditorWindow {
         var mapData = ROSEImport.GetMapListData();
         if (mapData != null)
         {
-            mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.Height(400));
+            mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.MaxHeight(400));
             for (var i = 0; i < mapData.stb.Cells.Count; ++i)
             {
                 string mapName = mapData.stl.GetString(mapData.stb.Cells[i][27], STL.Language.English);
@@ -45,7 +45,7 @@ public class ROSEImportWindow : EditorWindow {
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("[" + i.ToString() + "] " + mapName);
-                    if (GUILayout.Button("Import", GUILayout.Width(100)))
+                    if (GUILayout.Button("Import", GUILayout.Width(60)))
                     {
                         ROSEImport.ImportMap(i);
                     }
