@@ -22,6 +22,7 @@ public partial class ROSEImport
         protected override void DoImport(string targetPath)
         {
             var mat = new Material(Shader.Find("Standard"));
+            //mat.mainTexture = Texture.GetData();
             mat.SetTexture("_MainTex", Texture.GetData());
             AssetDatabase.CreateAsset(mat, targetPath);
         }

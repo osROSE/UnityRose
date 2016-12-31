@@ -316,7 +316,8 @@ public partial class ROSEImport {
                 {
                     var item = items[i];
 
-                    try {
+                    try
+                    {
                         bool forceRefresh = false;
 
                         if (item.GetType() == typeof(ChrImporter.Character))
@@ -324,7 +325,8 @@ public partial class ROSEImport {
 
                         item.Load();
                         item.Import(item._targetPath, forceRefresh);
-                    } catch (System.Exception e)
+                    }
+                    catch (System.Exception e)
                     {
                         Debug.LogWarning("Failed to import item");
                         Debug.LogWarning(item);
@@ -418,22 +420,54 @@ public partial class ROSEImport {
         return false;
     }
 
+    public static void ImportAllTiles()
+    {
+        Debug.Log("Importing All Tiles");
+
+        var importer = new Importer();
+
+        var tiles = new MapTileImport(importer);
+        for (var i = 0; i < tiles.Textures.Count; ++i)
+        {
+            importer.Mark(tiles.Textures[i]);
+        }
+
+        importer.Import();
+    }
+
+    public static void ImportTest()
+    {
+        Debug.Log("Importing Stuff");
+
+        var importer = new Importer();
+
+        var cnst = new MapZscImport(importer, "3DDATA/JUNON/LIST_CNST_JPT.ZSC");
+        for (var i = 0; i < System.Math.Min(10, cnst.Models.Count); ++i)
+        {
+            importer.Mark(cnst.Models[i]);
+        }
+
+        var deco = new MapZscImport(importer, "3DDATA/JUNON/LIST_DECO_JPT.ZSC");
+        for (var i = 0; i < System.Math.Min(10, deco.Models.Count); ++i)
+        {
+            importer.Mark(deco.Models[i]);
+        }
+
+        importer.Import();
+    }
+
     public static void ImportMap(int mapIdx)
     {
         Debug.Log("Importing Map #" + mapIdx);
 
-        var importer = new Importer();
+        Debug.LogWarning("CURRENTLY DISABLED");
+
+
+        //var importer = new Importer();
 
         //var male = importer.MakeSkeleton("3DDATA/AVATAR/MALE.ZMD");
         //importer.Mark(male);
 
-        //*
-        var map = new MapZscImport(importer, "3DDATA/JUNON/LIST_CNST_JPT.ZSC");
-        for (var i = 0; i < System.Math.Min(10, map.Models.Count); ++i)
-        {
-            importer.Mark(map.Models[i]);
-        }
-        //*/
         /*
         var npc = new ChrImporter(importer, "3DDATA/NPC/LIST_NPC.CHR", "3DDATA/NPC/PART_NPC.ZSC");
         for (var i = 0; i < System.Math.Min(10, npc.Characters.Count); ++i)
@@ -445,7 +479,7 @@ public partial class ROSEImport {
 
         //*/
 
-        importer.Import();
+        //importer.Import();
 
         //male.BuildGameObject();
 

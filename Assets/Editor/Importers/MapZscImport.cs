@@ -32,7 +32,35 @@ public partial class ROSEImport
 
             protected override void DoImport(string targetPath)
             {
-                Debug.Log("Import Object " + targetPath);
+                if (Parts.Count == 0) return;
+
+                var mdls = new List<GameObject>();
+
+                for (var i = 0; i < Parts.Count; ++i)
+                {
+                    var part = Parts[i];
+                    var sourcePart = part.SourcePart;
+
+                    var go = new GameObject();
+                    go.name = "Part_" + i;
+                    mdls.Add(go);
+
+                    var mf = go.AddComponent<MeshFilter>();
+                    mf.mesh = part.Mesh.GetData();
+
+                    var mr = go.AddComponent<MeshRenderer>();
+                    mr.material = part.Material.GetData();
+
+                    go.transform.localPosition = sourcePart.Position / 100;
+                    go.transform.localRotation = sourcePart.Rotation;
+                    go.transform.localScale = sourcePart.Scale;
+
+                    if (i != 0)
+                        go.transform.parent = mdls[sourcePart.Parent - 1].transform;
+                }
+
+                PrefabUtility.CreatePrefab(targetPath, mdls[0]);
+                GameObject.DestroyImmediate(mdls[0]);
             }
         }
 
@@ -86,7 +114,7 @@ public partial class ROSEImport
                     part.Material = materials[zscPart.TextureID];
                     obj.Parts.Add(part);
                 }
-                obj._targetPath = Utils.CombinePath(objBasePath, "Obj_" + i + ".asset");
+                obj._targetPath = Utils.CombinePath(objBasePath, "Obj_" + i + ".prefab");
                 parent.AddItem(obj);
                 Models.Add(obj);
             }

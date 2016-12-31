@@ -23,36 +23,50 @@ public class ROSEImportWindow : EditorWindow {
         GUILayout.Label("Settings", EditorStyles.boldLabel);
         dataPath = EditorGUILayout.TextField("3DData Path", dataPath);
 
-        GUILayout.Label("Importing", EditorStyles.boldLabel);
-        GUILayout.Label("Current Path: " + ROSEImport.GetCurrentPath());
+        GUILayout.Label("Cleanup", EditorStyles.boldLabel);
+
+        GUILayout.BeginHorizontal();
+
         if (GUILayout.Button("Clear Unity 3Ddata"))
             ROSEImport.ClearUData();
         if (GUILayout.Button("Clear All 3Ddata"))
             ROSEImport.ClearData();
 
-        GUILayout.Label("Maps", EditorStyles.boldLabel);
+        GUILayout.EndHorizontal();
 
-        mapListShowUnnamed = GUILayout.Toggle(mapListShowUnnamed, "Show Unnamed Maps");
+        GUILayout.Label("Importing", EditorStyles.boldLabel);
+        GUILayout.Label("Current Path: " + ROSEImport.GetCurrentPath());
 
-        var mapData = ROSEImport.GetMapListData();
-        if (mapData != null)
         {
-            mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.MaxHeight(400));
-            for (var i = 0; i < mapData.stb.Cells.Count; ++i)
+            if (GUILayout.Button("Import All Tiles"))
+                ROSEImport.ImportAllTiles();
+        }
+
+        {
+            GUILayout.Label("Maps", EditorStyles.miniBoldLabel);
+
+            mapListShowUnnamed = GUILayout.Toggle(mapListShowUnnamed, "Show Unnamed Maps");
+
+            var mapData = ROSEImport.GetMapListData();
+            if (mapData != null)
             {
-                string mapName = mapData.stl.GetString(mapData.stb.Cells[i][27], STL.Language.English);
-                if (mapName != null || mapListShowUnnamed)
+                mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.MaxHeight(400));
+                for (var i = 0; i < mapData.stb.Cells.Count; ++i)
                 {
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Label("[" + i.ToString() + "] " + mapName);
-                    if (GUILayout.Button("Import", GUILayout.Width(60)))
+                    string mapName = mapData.stl.GetString(mapData.stb.Cells[i][27], STL.Language.English);
+                    if (mapName != null || mapListShowUnnamed)
                     {
-                        ROSEImport.ImportMap(i);
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Label("[" + i.ToString() + "] " + mapName);
+                        if (GUILayout.Button("Import", GUILayout.Width(60)))
+                        {
+                            ROSEImport.ImportMap(i);
+                        }
+                        GUILayout.EndHorizontal();
                     }
-                    GUILayout.EndHorizontal();
                 }
+                GUILayout.EndScrollView();
             }
-            GUILayout.EndScrollView();
         }
 
 
