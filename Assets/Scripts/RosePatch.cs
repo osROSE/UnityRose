@@ -479,7 +479,7 @@ namespace UnityRose.Game
 			
 			Utils.calculateMeshTangents(m_mesh);
 			m_mesh.RecalculateBounds();
-			m_mesh.Optimize();
+			;
 			
 			//AssetDatabase.CreateAsset( m_mesh, "Assets/patch_" + this.m_name + ".mesh");
 			

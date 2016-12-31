@@ -1,4 +1,6 @@
-﻿Shader "UnityRose/TreeWind"
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "UnityRose/TreeWind"
 {
 
 	Properties{
@@ -89,7 +91,7 @@
 			v2f vert (appdata v)
 			{
 				v2f o;
-				float3 pos = mul(_Object2World, float4(0, 0, 0, 1)).xyz;
+				float3 pos = mul(unity_ObjectToWorld, float4(0, 0, 0, 1)).xyz;
 				float wind = GetWindLevel(v.vertex, pos);
 				v.vertex = v.vertex + wind*_WindDir;
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);

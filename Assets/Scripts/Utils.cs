@@ -371,7 +371,7 @@ public class Utils
 		
 		TextureImporter importer = (TextureImporter)TextureImporter.GetAtPath(normalMapPath);
 		importer.wrapMode = TextureWrapMode.Clamp;
-		importer.textureType = TextureImporterType.Bump;
+		importer.textureType = TextureImporterType.NormalMap;
 		importer.filterMode = FilterMode.Trilinear;
 		importer.normalmapFilter = TextureImporterNormalFilter.Standard;
 		importer.convertToNormalmap = true;

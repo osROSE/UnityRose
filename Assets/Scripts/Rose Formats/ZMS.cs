@@ -193,7 +193,7 @@ namespace UnityRose.Formats
 			}
 			Utils.calculateMeshTangents(mesh);
 			mesh.RecalculateBounds();
-			mesh.Optimize();
+			;
 			return mesh;
 		}
 

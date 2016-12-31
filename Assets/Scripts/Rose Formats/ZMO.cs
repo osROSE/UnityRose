@@ -153,7 +153,7 @@ namespace UnityRose.Formats
                 /// </summary>
                 /// <value>The texture coordinate.</value>
                 public Vector2 UV3 { get; set; }
-                
+
                 /// <summary>
                 /// Gets or sets the texture animation.
                 /// </summary>
@@ -179,7 +179,7 @@ namespace UnityRose.Formats
 
             #endregion
         };
-        
+
 
         #region Member Declarations
 
@@ -201,7 +201,7 @@ namespace UnityRose.Formats
         /// </summary>
         /// <value>The frames.</value>
         public Frame[] Frames { get; set; }
-        
+
         private int channelCount;
         private int frameCount;
 
@@ -225,17 +225,17 @@ namespace UnityRose.Formats
         {
             Load(filePath, camera, divide);
         }
-		
+
 		public AnimationClip buildAnimationClip(ZMD skeleton)
 		{
 			var clip = new AnimationClip();
-			
+
 			for (var i = 0; i < channelCount ; ++i) {
 				if (Channels[i].ID < 0 || Channels[i].ID >= skeleton.nBones) {
 					Debug.LogWarning("Found invalid channel index.");
 					continue;
 				}
-				
+
 				string cbn = skeleton.bones[Channels[i].ID].Path;
 				if (Channels[i].Type == ChannelType.Rotation) {
 					var curvex = new AnimationCurve();
@@ -253,7 +253,7 @@ namespace UnityRose.Formats
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.y", curvey);
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.z", curvez);
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.w", curvew);
-				} 
+				}
 				else if (Channels[i].Type == ChannelType.Position) {
 					var curvex = new AnimationCurve();
 					var curvey = new AnimationCurve();
@@ -267,7 +267,7 @@ namespace UnityRose.Formats
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.x", curvex);
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.y", curvey);
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.z", curvez);
-				} 
+				}
 			}
 
 			clip.EnsureQuaternionContinuity ();
@@ -277,7 +277,9 @@ namespace UnityRose.Formats
         public AnimationClip BuildSkeletonAnimationClip(string []boneNames)
         {
             var clip = new AnimationClip();
-            clip.legacy = true;
+            var settings = UnityEditor.AnimationUtility.GetAnimationClipSettings(clip);
+            settings.loopTime = true;
+            UnityEditor.AnimationUtility.SetAnimationClipSettings(clip, settings);
 
             for (var i = 0; i < channelCount; ++i)
             {
@@ -331,15 +333,15 @@ namespace UnityRose.Formats
 			//var clip = new AnimationClip();
 
 			for (var i = 0; i < channelCount ; ++i) {
-				
+
 				if (Channels[i].ID < 0 ) {
 					Debug.LogWarning("Found invalid channel index.");
 					continue;
 				}
-				
+
 				//string cbn = skeleton.bones[Channels[i].ID].Path;
 				string cbn = objectName;
-				
+
 				if (Channels[i].Type == ChannelType.Rotation) {
 					var curvex = new AnimationCurve();
 					var curvey = new AnimationCurve();
@@ -356,7 +358,7 @@ namespace UnityRose.Formats
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.y", curvey);
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.z", curvez);
 					clip.SetCurve(cbn, typeof(Transform), "localRotation.w", curvew);
-				} 
+				}
 				else if (Channels[i].Type == ChannelType.Position) {
 					var curvex = new AnimationCurve();
 					var curvey = new AnimationCurve();
@@ -370,17 +372,17 @@ namespace UnityRose.Formats
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.x", curvex);
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.y", curvey);
 					clip.SetCurve(cbn, typeof(Transform), "localPosition.z", curvez);
-				} 
+				}
 			}
-			
-			
-			
+
+
+
 			//AssetDatabase.CreateAsset(clip, "Assets/Animations/" + Path.GetFileName( fileName) + ".anim");
 			//AssetDatabase.SaveAssets();
-			
+
 			return clip;
 		}
-		
+
         /// <summary>
         /// Loads the specified file.
         /// </summary>
@@ -399,7 +401,7 @@ namespace UnityRose.Formats
 
 			Channels = new Channel[channelCount];
 
-            
+
 			for (int i = 0; i < channelCount; i++)
             {
                 Channels[i] = new Channel()
@@ -407,9 +409,9 @@ namespace UnityRose.Formats
                     Type = (ChannelType)fh.Read<int>(),
                     ID = fh.Read<int>()
                 };
-                
+
             }
-            
+
 
             Frames = new Frame[frameCount];
 
