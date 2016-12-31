@@ -130,10 +130,12 @@ public partial class ROSEImport
             {
                 Debug.Log("Import Character " + targetPath);
 
+                /*
                 var data = ScriptableObject.CreateInstance<RoseNpcData>();
                 data.NpcName = SourceObject.Name;
                 data.Model = Model.GetData();
                 AssetDatabase.CreateAsset(data, targetPath);
+                */
             }
         }
 
