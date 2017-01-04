@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityRose.Formats;
 using System.Collections;
+using System.IO;
 
 public class ROSEImportWindow : EditorWindow {
 
@@ -14,6 +15,16 @@ public class ROSEImportWindow : EditorWindow {
     static void Init() {
         var window = GetWindow<ROSEImportWindow>("ROSE Import");
         window.Show();
+    }
+
+    [MenuItem("ROSE/Recalculate Normals")]
+    static void RecalcNormals()
+    {
+        var mesh = Selection.activeObject as Mesh;
+        if (mesh)
+        {
+            mesh.RecalculateNormals();
+        }
     }
 
     private Vector2 mapListScrollPosition;
@@ -37,38 +48,50 @@ public class ROSEImportWindow : EditorWindow {
         GUILayout.Label("Importing", EditorStyles.boldLabel);
         GUILayout.Label("Current Path: " + ROSEImport.GetCurrentPath());
 
-        {
-            if (GUILayout.Button("Import All Tiles"))
-                ROSEImport.ImportAllTiles();
-        }
+        var roseDataPath = Path.Combine(ROSEImport.GetCurrentPath(), "3DDATA");
+        if (!Directory.Exists(roseDataPath)) {
+            GUILayout.Space(10);
+            GUILayout.Label("Invalid Path", EditorStyles.centeredGreyMiniLabel);
+            GUILayout.Label("(Could not find `" + roseDataPath + "`)", EditorStyles.centeredGreyMiniLabel);
+        } else {
+            if (true) {
+                if (GUILayout.Button("Import All Tiles"))
+                    ROSEImport.ImportAllTiles();
+            }
 
-        {
-            GUILayout.Label("Maps", EditorStyles.miniBoldLabel);
-
-            mapListShowUnnamed = GUILayout.Toggle(mapListShowUnnamed, "Show Unnamed Maps");
-
-            var mapData = ROSEImport.GetMapListData();
-            if (mapData != null)
+            if (true)
             {
-                mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.MaxHeight(400));
-                for (var i = 0; i < mapData.stb.Cells.Count; ++i)
+                if (GUILayout.Button("Import Test"))
+                    ROSEImport.ImportTest();
+            }
+
+            if (true) {
+                GUILayout.Label("Maps", EditorStyles.boldLabel);
+
+                mapListShowUnnamed = GUILayout.Toggle(mapListShowUnnamed, "Show Unnamed Maps");
+
+                var mapData = ROSEImport.GetMapListData();
+                if (mapData != null)
                 {
-                    string mapName = mapData.stl.GetString(mapData.stb.Cells[i][27], STL.Language.English);
-                    if (mapName != null || mapListShowUnnamed)
+                    mapListScrollPosition = GUILayout.BeginScrollView(mapListScrollPosition, GUILayout.MaxHeight(400));
+                    for (var i = 0; i < mapData.stb.Cells.Count; ++i)
                     {
-                        GUILayout.BeginHorizontal();
-                        GUILayout.Label("[" + i.ToString() + "] " + mapName);
-                        if (GUILayout.Button("Import", GUILayout.Width(60)))
+                        string mapName = mapData.stl.GetString(mapData.stb.Cells[i][27], STL.Language.English);
+                        if (mapName != null || mapListShowUnnamed)
                         {
-                            ROSEImport.ImportMap(i);
+                            GUILayout.BeginHorizontal();
+                            GUILayout.Label("[" + i.ToString() + "] " + mapName);
+                            if (GUILayout.Button("Import", GUILayout.Width(60)))
+                            {
+                                ROSEImport.ImportMap(i);
+                            }
+                            GUILayout.EndHorizontal();
                         }
-                        GUILayout.EndHorizontal();
                     }
+                    GUILayout.EndScrollView();
                 }
-                GUILayout.EndScrollView();
             }
         }
-
 
         if (EditorGUIUtility.editingTextField)
         {

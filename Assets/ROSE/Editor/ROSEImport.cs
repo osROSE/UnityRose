@@ -460,54 +460,19 @@ public partial class ROSEImport {
     {
         Debug.Log("Importing Map #" + mapIdx);
 
-        Debug.LogWarning("CURRENTLY DISABLED");
+        var importer = new Importer();
 
+        var decoPath = mapListData.stb.Cells[mapIdx][12];
+        var decoImp = new MapZscImport(importer, decoPath);
+        for (var i = 0; i < decoImp.Models.Count; ++i)
+            importer.Mark(decoImp.Models[i]);
 
-        //var importer = new Importer();
+        var cnstPath = mapListData.stb.Cells[mapIdx][13];
+        var cnstImp = new MapZscImport(importer, cnstPath);
+        for (var i = 0; i < cnstImp.Models.Count; ++i)
+            importer.Mark(cnstImp.Models[i]);
 
-        //var male = importer.MakeSkeleton("3DDATA/AVATAR/MALE.ZMD");
-        //importer.Mark(male);
-
-        /*
-        var npc = new ChrImporter(importer, "3DDATA/NPC/LIST_NPC.CHR", "3DDATA/NPC/PART_NPC.ZSC");
-        for (var i = 0; i < System.Math.Min(10, npc.Characters.Count); ++i)
-            importer.Mark(npc.Characters[i]);
-        //*/
-        /*
-        var ptl = importer.MakeParticleSystem("3DDATA/EFFECT/PARTICLES/FIRE_BALL_HIT01.PTL");
-        importer.Mark(ptl);
-
-        //*/
-
-        //importer.Import();
-
-        //male.BuildGameObject();
-
-        /*
-        AssetHelper.StartAssetEditing();
-        try
-        {
-            var importer = new ChrImporter();
-            for (var i = 0; i < 2; ++i)
-            {
-                var x = importer.ImportNpc(i);
-                //PrefabUtility.InstantiatePrefab(x);
-            }
-
-            var importerX = new ZscImporter("3DDATA\\JUNON\\LIST_CNST_JPT.ZSC");
-
-            for (var i = 1; i < 10; ++i)
-            {
-                var obj = importerX.ImportObject(i);
-                GameObject pf = (GameObject)GameObject.Instantiate(obj);
-                Debug.Log(pf);
-            }
-        }
-        finally
-        {
-            AssetHelper.StopAssetEditing();
-        }
-        */
+        importer.Import();
     }
 
     private static string GenerateAssetPath(string rosePath, string unityExt)

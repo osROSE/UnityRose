@@ -67,9 +67,6 @@ public partial class ROSEImport
         public string SourcePath;
         public List<Model> Models;
 
-        private static Regex mapZsc = new Regex("3DDATA/([A-Z]*)/LIST_([A-Z_]*).ZSC", RegexOptions.IgnoreCase);
-        private static Regex npcZsc = new Regex("(.*)/PART_NPC.ZSC", RegexOptions.IgnoreCase);
-
         public MapZscImport(Importer parent, string path)
         {
             var objBasePath = GenerateZscBasePath(path);
