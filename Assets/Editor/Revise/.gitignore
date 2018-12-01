@@ -1,0 +1,6 @@
+
+*/obj
+*/bin
+*.suo
+/packages/NUnit.2.5.10.11092/tools
+/packages/NUnit.2.5.10.11092/NUnitFitTests.html
